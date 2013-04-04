@@ -1,0 +1,7 @@
+
+/.nuget/nuget.exe
+/packages
+*.suo
+/scalejs.transitions/build
+/scalejs.transitions/obj
+/scalejs.transitions/scalejs.transitions.csproj.user
