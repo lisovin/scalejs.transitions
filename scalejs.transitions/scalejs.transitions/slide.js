@@ -10,7 +10,7 @@ define([
 ) {
     'use strict';
 
-    return function slide(opts) {
+    function slideIn(opts) {
         var complete = core.functional.builders.complete,
             $DO = core.functional.builder.$DO,
             $do = core.functional.builder.$do;
@@ -36,6 +36,10 @@ define([
                 duration: 400
             }))
         );
+    }
+
+    return {
+        slideIn: slideIn
     };
 });
 

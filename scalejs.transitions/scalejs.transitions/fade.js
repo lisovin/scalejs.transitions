@@ -9,12 +9,10 @@ define([
     'use strict';
 
     var merge = core.object.merge,
-        get = core.object.get,
-        $DO = core.functional.builder.$DO;
-
+        get = core.object.get;
 
     function fadeOut(opts) {
-        return $DO(function (complete) {
+        return function (complete) {
             var element = this.getElement();
 
             opts = merge(opts, {
@@ -32,7 +30,7 @@ define([
             });
 
             $(element).hide(opts);
-        });
+        };
     }
 
     return {

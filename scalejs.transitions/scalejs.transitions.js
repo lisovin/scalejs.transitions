@@ -2,7 +2,7 @@
 define([
     'scalejs!core',
     'knockout',
-    'scalejs.transitions/transitionableMixin',
+    'scalejs.transitions/transitionableState',
     'scalejs.transitions/transitionable',
     'scalejs.transitions/activate',
     'scalejs.transitions/animate',
@@ -14,7 +14,7 @@ define([
 ], function (
     core,
     ko,
-    transitionableMixin,
+    transitionableState,
     transitionableBinding,
     activate,
     animate,
@@ -30,12 +30,13 @@ define([
     ko.virtualElements.allowedBindings.transitionable = true;
 
     core.registerExtension({
-        transitions: merge(transitionableMixin, {
+        transitions: merge(transitionableState, {
             animate: animate,
             activate: activate,
-            busy: busy,
+            busy: busy.busy,
+            busyUntilInState: busy.busyUntilInState,
             fadeOut: fade.fadeOut,
-            slide: slide
+            slideIn: slide.slideIn
         })
     });
 });

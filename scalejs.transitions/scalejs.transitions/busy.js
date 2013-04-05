@@ -2,14 +2,16 @@
 /*jslint unparam:true*/
 define([
     'scalejs!core',
-    'jQuery'
+    'jQuery',
+    './activate'
 ], function (
     core,
-    $
+    $,
+    activate
 ) {
     'use strict';
 
-    return function busy() {
+    function busy() {
         var complete = core.functional.builders.complete,
             $DO = core.functional.builder.$DO,
             operations = core.array.copy(arguments),
@@ -63,8 +65,12 @@ define([
             }, 0);
         }
 
-        operations.unshift($DO(showBusy));
-        operations.push($DO(closeBusy));
+        operations.unshift(showBusy, activate());
+        operations.push(closeBusy);
+
+        operations.forEach(function (op, i) {
+            operations[i] = $DO(op);
+        });
 
         busyCompletable = complete.apply(null, operations);
 
@@ -72,6 +78,17 @@ define([
             renderElement = this.renderElement;
             return busyCompletable.bind(this)(complete);
         };
+    }
+
+    function busyUntilInState(state) {
+        var waitForState = core.state.onState;
+        return busy(activate(), waitForState(state));
+    }
+
+    return {
+        busy: busy,
+        busyUntilInState: busyUntilInState
     };
+
 });
 /*jslint unparam:false*/

@@ -9,9 +9,7 @@ define([
 ) {
     'use strict';
 
-    var is = core.type.is,
-        merge = core.object.merge,
-        //debug = core.log.debug,
+    var merge = core.object.merge,
         observable = ko.observable,
         complete = core.functional.builders.complete,
         parallel = core.state.builder.parallel,
@@ -19,33 +17,36 @@ define([
         raise = core.state.raise,
         on = core.state.builder.on,
         onEntry = core.state.builder.onEntry,
-        onExit = core.state.builder.onExit,
         goto = core.state.builder.goto,
-        gotoInternally = core.state.builder.gotoInternally;
+        gotoInternally = core.state.builder.gotoInternally,
+        $DO = core.functional.builder.$DO;
 
-    function makeTransitionable(wrapped, opts) {
-        var result;
+    function transitionableState(wrapped, opts) {
+        var wrappedId = wrapped.id,
+            result;
 
         function withStateId(suffix) {
-            return wrapped.id + '.' + suffix;
+            return wrappedId + '.' + suffix;
         }
 
-        result = parallel(withStateId('transitionable'),
+        opts = merge({ onEntry: [], onExit: [] }, opts);
+        wrapped.id = withStateId('transitionable');
+
+        result = parallel(wrappedId,
             onEntry(function () {
-                var self = this,
-                    inTransition = complete.apply(null, opts.inTransitions),
-                    outTransition = complete.apply(null, opts.outTransitions);
+                var inTransition = complete.apply(null, opts.onEntry.map(function (t) { return $DO(t); })),
+                    outTransition = complete.apply(null, opts.onExit.map(function (t) { return $DO(t); }));
 
                 this.root = observable();
                 this.active = observable();
 
                 opts.root({
-                    'transitionable':  { // modify mvvm to support this way of rendering binging
-                        transitionableState: self.transitionableState,
+                    'transitionable':  {
+                        transitionableState: this.transitionableState,
                         inTransition: inTransition,
                         outTransition: outTransition,
-                        active: self.active,
-                        renderable: self.root,
+                        active: this.active,
+                        renderable: this.root,
                         raise: raise,
                         afterTransition: function () {
                             raise(withStateId('transitions.finished'));
@@ -67,11 +68,7 @@ define([
                         raise(withStateId('transitionable.activating'));
                     }),
 
-                    on(withStateId('transitions.finished'), goto(withStateId('transitions.idle'))),
-
-                    onExit(function () {
-                        this[withStateId('transitionable.subscription')].dispose();
-                    })),
+                    on(withStateId('transitions.finished'), goto(withStateId('transitions.idle')))),
 
                 state(withStateId('transitions.idle'),
                     on('transitioning', function (e) {
@@ -92,7 +89,7 @@ define([
                 on(withStateId('transitionable.activating'), gotoInternally(wrapped.id)),
 
                 on('transitioned.out', function (e) {
-                    return e.data.target === wrapped.id;
+                    return e.data.target === wrappedId;
                 }, function (e) {
                     core.object.extend(this, e.data);
                     raise(withStateId('transitions.starting'));
@@ -108,14 +105,8 @@ define([
         raise('transitioning', merge(data, { target: target }));
     }
 
-    function activate() {
-        return function (complete) {
-            raise('activating');
-            complete();
-        };
-    }
-
     /*jslint unparam:true*/
+    /*
     function createTransitionableParallel() {
         var opts = {};
 
@@ -131,13 +122,12 @@ define([
                 return makeTransitionable(state, opts);
             }
         });
-    }
+    }*/
     /*jslint unparam:false*/
 
     return {
-        transitionableParallel: createTransitionableParallel(),
-        transitionTo: transitionTo,
-        activate: activate
+        transitionableState: transitionableState,
+        transitionTo: transitionTo
     };
 });
 

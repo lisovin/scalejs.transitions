@@ -1,18 +1,16 @@
 ﻿/*global define*/
 define([
-    'scalejs!core'
+    //'scalejs!core'
 ], function (
-    core
+    //core
 ) {
     'use strict';
 
-    var $DO = core.functional.builder.$DO;
-
     return function activate() {
-        return $DO(function (complete) {
+        return function (complete) {
             this.raise('activating', 0);
             complete();
-        });
+        };
     };
 });
 

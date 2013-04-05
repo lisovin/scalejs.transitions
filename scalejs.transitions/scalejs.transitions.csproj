@@ -8,13 +8,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Properties\build.rjs" />
-    <Content Include="Properties\scalejs.transitions.nuspec" />
+    <Content Include="Properties\scalejs.transitions.nuspec">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="scalejs.transitions.js" />
     <Content Include="scalejs.transitions\busy.js" />
     <Content Include="scalejs.transitions\animate.js" />
     <Content Include="scalejs.transitions\activate.js" />
     <Content Include="scalejs.transitions\transitionable.js" />
-    <Content Include="scalejs.transitions\transitionableMixin.js" />
+    <Content Include="scalejs.transitions\transitionableState.js" />
     <Content Include="scalejs.transitions\slide.js" />
     <Content Include="scalejs.transitions\fade.js" />
     <Content Include="scalejs.transitions\transitionable_.js" />
