@@ -15,11 +15,8 @@
     <Content Include="scalejs.transitions\busy.js" />
     <Content Include="scalejs.transitions\animate.js" />
     <Content Include="scalejs.transitions\activate.js" />
-    <Content Include="scalejs.transitions\transitionable.js" />
-    <Content Include="scalejs.transitions\transitionableState.js" />
     <Content Include="scalejs.transitions\slide.js" />
     <Content Include="scalejs.transitions\fade.js" />
-    <Content Include="scalejs.transitions\transitionable_.js" />
     <Content Include="Scripts\es5-shim.js" />
     <Content Include="Scripts\es5-shim.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.0.effects.js" />

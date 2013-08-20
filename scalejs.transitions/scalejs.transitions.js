@@ -1,9 +1,6 @@
 /*global define*/
 define([
     'scalejs!core',
-    'knockout',
-    'scalejs.transitions/transitionableState',
-    'scalejs.transitions/transitionable',
     'scalejs.transitions/activate',
     'scalejs.transitions/animate',
     'scalejs.transitions/busy',
@@ -13,9 +10,6 @@ define([
     'jQuery-ui-effects'
 ], function (
     core,
-    ko,
-    transitionableState,
-    transitionableBinding,
     activate,
     animate,
     busy,
@@ -24,20 +18,15 @@ define([
 ) {
     'use strict';
 
-    var merge = core.object.merge;
-
-    ko.bindingHandlers.transitionable = transitionableBinding;
-    ko.virtualElements.allowedBindings.transitionable = true;
-
     core.registerExtension({
-        transitions: merge(transitionableState, {
+        transitions: {
             animate: animate,
             activate: activate,
             busy: busy.busy,
             busyUntilInState: busy.busyUntilInState,
             fadeOut: fade.fadeOut,
             slideIn: slide.slideIn
-        })
+        }
     });
 });
 
